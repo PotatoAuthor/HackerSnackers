@@ -1,5 +1,6 @@
 import pygame
 from pygame import MOUSEBUTTONDOWN
+import LoginActivity
 
 pygame.init()
 
@@ -53,6 +54,6 @@ while playing_game:
         if event.type == MOUSEBUTTONDOWN:
             mouse_pos = event.pos  # Now it will have the coordinates of click point.
             if rect.collidepoint(mouse_pos):
-                print('hi')
+                LoginActivity.get_oauth2_token()
 
 pygame.quit()

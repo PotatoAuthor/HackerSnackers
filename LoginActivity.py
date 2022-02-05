@@ -37,26 +37,23 @@ def enable_stout(o_stdout, o_file):
 
 
 def get_oauth2_token():
-    CLIENT_ID = "581786658708-elflankerquo1a6vsckabbhn25hclla0.apps.googleusercontent.com"
-    CLIENT_SECRET = "3f6NggMbPtrmIBpgx-MK2xXK"
-    SCOPE = 'https://www.googleapis.com/auth/userinfo.email'
-    REDIRECT_URI = '<Redirect URI from Google API Console>'
+    CLIENT_ID = "811089499751-v846pgcg6sv4u8hks5377s42g6qg4s41.apps.googleusercontent.com"
+    CLIENT_SECRET = "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"
+    SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
 
     o_stdout, o_file = disable_stout()
 
     flow = OAuth2WebServerFlow(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
-        scope=SCOPE,
-        redirect_uri=REDIRECT_URI)
+        scope=SCOPE)
 
-    storage = Storage('credentials.json')
+    storage = Storage('token.json')
     credentials = run_flow(flow, storage)
     enable_stout(o_stdout, o_file)
 
     print("access_token: %s" % credentials.access_token)
 
-
-if __name__ == '__main__':
-    return_token()
-
+#
+# if __name__ == '__main__':
+#     return_token()
