@@ -71,11 +71,7 @@ def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
         # use this to make python have a fixed length array
         return schedule_array[0:max_scan_time_days*96-1]
 
-def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
-    creds = None
+def authenticate(creds):
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -92,6 +88,14 @@ def main():
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
+    return creds
+
+def main():
+    """Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 10 events on the user's calendar.
+    """
+    creds = None
+    creds = authenticate(creds)
 
     try:
         service = build('calendar', 'v3', credentials=creds)
@@ -108,7 +112,8 @@ def main():
             if not page_token:
                 break
         
-        # ask the user to check boxes indicating which calendars to analyze
+        # ask the user to check boxes indicating which calendars to analyze.
+
         cals_to_check = ['golem8gamer@gmail.com', 'Holidays in Canada', 'broland']
         max_scan_time_days = 3
         free_time_array = get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days)
