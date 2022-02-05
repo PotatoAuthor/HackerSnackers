@@ -50,7 +50,7 @@ def get_oauth2_token():
         scope=SCOPE,
         redirect_uri=REDIRECT_URI)
 
-    storage = Storage('creds.data')
+    storage = Storage('credentials.json')
     credentials = run_flow(flow, storage)
     enable_stout(o_stdout, o_file)
 
