@@ -71,7 +71,7 @@ def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
         # use this to make python have a fixed length array
         return schedule_array[0:max_scan_time_days*96-1]
 
-def authenticate(creds):
+def authenticate():
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
