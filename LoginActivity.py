@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 """
+https://gist.github.com/clarketm/dc5d5be390e3f811a2dd7f5e8c5728ba
 This script will attempt to open your webbrowser,
 perform OAuth 2.0 authentication and print your access token.
 To install dependencies from PyPI:
@@ -15,9 +16,11 @@ This is a combination of snippets from:
 import os
 import sys
 
-from oauth2client.client import OAuth2WebServerFlow
+from google_auth_oauthlib.flow import InstalledAppFlow
 from oauth2client.file import Storage
 from oauth2client.tools import run_flow
+
+SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
 
 
 def return_token():
@@ -37,23 +40,13 @@ def enable_stout(o_stdout, o_file):
 
 
 def get_oauth2_token():
-    CLIENT_ID = "811089499751-v846pgcg6sv4u8hks5377s42g6qg4s41.apps.googleusercontent.com"
-    CLIENT_SECRET = "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"
-    SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
-
     o_stdout, o_file = disable_stout()
 
-    flow = OAuth2WebServerFlow(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        scope=SCOPE)
+    flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPE)
 
     storage = Storage('token.json')
     credentials = run_flow(flow, storage)
     enable_stout(o_stdout, o_file)
 
     print("access_token: %s" % credentials.access_token)
-
-#
-# if __name__ == '__main__':
-#     return_token()

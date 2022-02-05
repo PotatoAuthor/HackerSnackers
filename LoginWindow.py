@@ -5,14 +5,13 @@ import gui
 
 
 def main():
-    """Main function of the """
+    """Main function of the Amitee program. Creates a window that prompts users to login"""
     pygame.init()
 
     # width and height of window
     width, height = pygame.display.Info().current_w, pygame.display.Info().current_h
 
-    # text and button positions
-    text_x, text_y = 10, 10
+    # button positions
     button_x, button_y = 30, 80
 
     # pygame.key.set_repeat(300, 30)
@@ -28,8 +27,8 @@ def main():
     rect = pygame.Rect(button_x, button_y, 412, 96)
 
     # button image
-    loginBox = pygame.image.load("Assets/btn_google_sign-in.png")
-    screen.blit(loginBox, (button_x, button_y))
+    login_box = pygame.image.load("Assets/btn_google_sign-in.png")
+    screen.blit(login_box, (button_x, button_y))
 
     pygame.display.flip()
 
