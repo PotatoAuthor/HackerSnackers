@@ -1,11 +1,9 @@
 import datetime
 import os.path
 import random
-from re import L
 import LoginWindow
 import gui
 import json
-import time
 import freeTimes
 from pytz import timezone
 
