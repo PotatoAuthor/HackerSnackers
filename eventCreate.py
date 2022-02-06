@@ -68,7 +68,7 @@ def event_create(start_date: list[int], end_date: list[int], title: str, locatio
     except HttpError as error:
         print('An error occurred: %s' % error)
 
-
-if __name__ == '__main__':
-    event_create([2022, 2, 5, 19, 6], [2022, 2, 5, 20, 0], "Event Creation",
-                 "Paris", "Hi", ["sjd3002@gmail.com"])
+# Test
+# if __name__ == '__main__':
+#     event_create([2022, 2, 5, 19, 6], [2022, 2, 5, 20, 0], "Event Creation",
+#                  "Paris", "Hi", ["sjd3002@gmail.com"])
