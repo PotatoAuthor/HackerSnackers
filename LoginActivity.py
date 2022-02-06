@@ -22,7 +22,7 @@ from oauth2client.tools import run_flow
 
 CLIENT_ID = '811089499751-v846pgcg6sv4u8hks5377s42g6qg4s41.apps.googleusercontent.com'
 CLIENT_SECRET = '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'
-SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
+SCOPE = 'https://www.googleapis.com/auth/calendar'
 
 
 def return_token():
