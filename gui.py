@@ -8,7 +8,6 @@ cal = []
 for c in calendar_list:
     cal.append(c)
 
-
 def calendar():
     title_element = thorpy.make_text("Chose calendar to use", 40, (236, 158, 80))
     elements = [title_element]
@@ -68,7 +67,6 @@ def done():
     print(ans)
     thorpy.functions.quit_menu_func()
     thorpy.functions.quit_menu_func()
-
 
 def main():
     application = thorpy.Application(size=(1000, 800), caption="Amitee")

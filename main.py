@@ -109,6 +109,7 @@ def main():
             if not page_token:
                 break
         
+        # ask the user to check boxes indicating which calendars to analyze
         # ask the user to check boxes indicating which calendars to analyze.
 
         cals_to_check = ['golem8gamer@gmail.com', 'Holidays in Canada', 'broland']
