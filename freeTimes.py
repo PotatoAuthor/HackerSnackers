@@ -33,7 +33,7 @@ def free_times(occupied: list[int]) -> \
             start_time_free = start_time_free.replace(hour=8)
         else:
             continue
-        free_times.append((start_time_free, end_time_free, run_length[i]))
+        free_times.append((start_time_free, end_time_free, run_length[i], i))
     return free_times
 
 

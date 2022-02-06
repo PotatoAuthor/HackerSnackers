@@ -6,7 +6,10 @@ import random
 from re import L
 import LoginWindow
 import gui
+import json
 import time
+import freeTimes
+from pytz import timezone
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -105,7 +108,7 @@ def authenticate():
     return creds
 
 def event_create(start_date: list[int], end_date: list[int], title: str, location: str,
-                 description: str, attendees: list[str], service):
+                 description: str, attendees: list[str], service, calendars_dict):
     """
 
     :param start_date: list of integers indicating the year, month, day, hour and minute of the
@@ -131,14 +134,9 @@ def event_create(start_date: list[int], end_date: list[int], title: str, locatio
     event_body_dict['attendees'] = attendees_body
     event_body = json.dumps(event_body_dict)
     event_object = json.loads(event_body)
-    print(event_body)
     try:
-        calendar = {
-            'summary': 'Amitee Suggestions',
-        }
-        amitee_calendar = service.calendars().insert(body=calendar).execute()
-        event = service.events().insert(calendarId=amitee_calendar['id'], body=event_object).execute()
-        print('Event created: %s' % (event.get('htmlLink')))
+
+            event = service.events().insert(calendarId=calendars_dict['Amitee Suggestions'], body=event_object).execute()
     except HttpError as error:
         print('An error occurred: %s' % error)
 
@@ -148,10 +146,6 @@ def main():
 
     try:
         service = build('calendar', 'v3', credentials=creds)
-        calendar = {
-            'summary': 'Amitee Suggestions',
-        }
-        amitee_calendar = service.calendars().insert(body=calendar).execute()
 
         # Build a dictionary of calendars and their ids
         # calendars_dict will hold kv pairs, mapping calendar names to their ids
@@ -164,6 +158,13 @@ def main():
             page_token = calendar_list.get('nextPageToken')
             if not page_token:
                 break
+        # create calendar for suggestions if it doesnt exist already
+        if not 'Amitee Suggestions' in calendars_dict.keys():
+            calendar = {
+                'summary': 'Amitee Suggestions',
+            }
+            amitee_calendar = service.calendars().insert(body=calendar).execute()
+            calendars_dict['Amitee Suggestions'] = amitee_calendar['id']
         
         # ask the user to check boxes indicating which calendars to analyze
         cals_to_check = gui.main(calendars_dict)
@@ -172,12 +173,9 @@ def main():
         max_scan_time_days = 3
         free_time_array = get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days)
         print (free_time_array)
-
-        # call Ronit's function to get run lengths
-        # which returns start time, end time, and run length (in terms of buckets)
-
-        for data in run_lengths:
-            start_datetimeobj, end_datetimeobj, runlen = data
+        
+        for data in freeTimes.free_times(free_time_array):
+            start_datetimeobj, end_datetimeobj, runlen, dummy = data
             chosen_event = None
             if runlen >= 8:
                 chosen_event = random.choice(events120m)
@@ -189,8 +187,9 @@ def main():
                 chosen_event = random.choice(events15m)
             start_date = [start_datetimeobj.year, start_datetimeobj.month, start_datetimeobj.day, start_datetimeobj.hour, start_datetimeobj.minute]
             end_date = [end_datetimeobj.year, end_datetimeobj.month, end_datetimeobj.day, end_datetimeobj.hour, end_datetimeobj.minute]
+            
             event_create(start_date=start_date, end_date=end_date, title=chosen_event, 
-                location=None, description=None, attendees=None, service=service)
+                location='', description='', attendees=[], service=service, calendars_dict=calendars_dict)
             print(chosen_event)
     except HttpError as error:
         print('An error occurred: %s' % error)
