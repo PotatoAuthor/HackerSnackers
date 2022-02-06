@@ -21,5 +21,6 @@ to do, it always helps to interact with others, not just for the
 restoration of relationships, but also for the restoration of 
 our mental health.
 
-### Exteral API's Used
-We used Google's 
+### External API's Used
+We used Google Cloud's Python api to authorize access and interact with
+users' Google calendars by utilizing Google's oauth flow.
