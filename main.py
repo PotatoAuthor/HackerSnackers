@@ -42,8 +42,8 @@ events120m = ['Ripley’s Aquarium with your friend', 'Edge Walk at CN with your
 def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
         #fixed size array filled with 0s, which has the number of 15 minute time blocks in max_scan_time_days
         # minus one since the first bucket starts at the NEXT quarter hour
-        schedule_array = [0]*(max_scan_time_days*96-1) 
-        
+        schedule_array = [0]*(max_scan_time_days*96-1)
+
         # gets current timestamp
         now = str(datetime.datetime.now(datetime.timezone.utc).isoformat()[:-6] + 'Z')  # 'Z' indicates UTC time
         # gets timestamp of the end of the serach range (in UTC)
@@ -79,7 +79,6 @@ def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
                     # fill the schedule array with 1's when the event is taking place
                     if (event_ending_index >= 0):
                         schedule_array[max(0, event_start_index):event_ending_index] = [1]*(event_ending_index-max(0, event_start_index)+1)
-                        
                 page_token = events.get('nextPageToken')
                 if not page_token:
                     break
@@ -165,17 +164,15 @@ def main():
             }
             amitee_calendar = service.calendars().insert(body=calendar).execute()
             calendars_dict['Amitee Suggestions'] = amitee_calendar['id']
-        
+
         # ask the user to check boxes indicating which calendars to analyze
         cals_to_check = gui.main(calendars_dict)
 
         # the max time to look at in days, this determines how far out calendar suggestrions will be made
         max_scan_time_days = 3
         free_time_array = get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days)
-        print (free_time_array)
-        
         for data in freeTimes.free_times(free_time_array):
-            start_datetimeobj, end_datetimeobj, runlen, dummy = data
+            start_datetimeobj, end_datetimeobj, runlen = data
             chosen_event = None
             if runlen >= 8:
                 chosen_event = random.choice(events120m)
@@ -187,8 +184,8 @@ def main():
                 chosen_event = random.choice(events15m)
             start_date = [start_datetimeobj.year, start_datetimeobj.month, start_datetimeobj.day, start_datetimeobj.hour, start_datetimeobj.minute]
             end_date = [end_datetimeobj.year, end_datetimeobj.month, end_datetimeobj.day, end_datetimeobj.hour, end_datetimeobj.minute]
-            
-            event_create(start_date=start_date, end_date=end_date, title=chosen_event, 
+
+            event_create(start_date=start_date, end_date=end_date, title=chosen_event,
                 location='', description='', attendees=[], service=service, calendars_dict=calendars_dict)
             print(chosen_event)
     except HttpError as error:
