@@ -1,7 +1,6 @@
 import pygame
 from pygame import MOUSEBUTTONDOWN
 import LoginActivity
-import gui
 
 
 def main():
