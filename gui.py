@@ -1,12 +1,9 @@
 import thorpy
 
 # change the dictionary below to the dict of the input dictionary
-calendar_list = {'main': 12984789372, 'utat': 120947908, 'canada holidays': 1092347820188}
-calendar_length = len(calendar_list)
 ans = set()
-cal = []
-for c in calendar_list:
-    cal.append(c)
+
+
 
 def calendar():
     title_element = thorpy.make_text("Chose calendar to use", 40, (236, 158, 80))
@@ -68,7 +65,16 @@ def done():
     thorpy.functions.quit_menu_func()
     thorpy.functions.quit_menu_func()
 
-def main():
+def main(cal_dict):
+    global calendar_list
+    global calendar_length
+    global cal
+    calendar_list = cal_dict
+    calendar_length = len(calendar_list)
+    cal = []
+    for c in calendar_list:
+        cal.append(c)
+
     application = thorpy.Application(size=(1000, 800), caption="Amitee")
     e_title = thorpy.make_text("Amitee", font_size=40, font_color=(10, 10, 10))
     e_title.center()
@@ -82,6 +88,7 @@ def main():
     menu = thorpy.Menu(e_background)
     menu.play()
     application.quit()
+    return ans
 
 
 if __name__ == '__main__':

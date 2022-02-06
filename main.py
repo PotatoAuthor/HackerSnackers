@@ -4,6 +4,8 @@ import datetime
 import os.path
 import random
 from re import L
+import LoginWindow
+import gui
 import time
 
 from google.auth.transport.requests import Request
@@ -17,8 +19,8 @@ from gui import d
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
-events15m = []
-events30m = []
+events15m = ['Screen break']
+events30m =  ['discord call a friend', 'create a card or short video for someone far away', 'listen to some good music with a friend', 'make a cup of coffee/tea for someone', 'play a quick game of pickup basketball' , 'do a quick cardio workout', 'share you favorite tik tok']
 events60m = ['play league of legends with your friends', 'go on a walk in the park with your friends', 'watching football with your friends', 'rock climbing with your friends', 'hit the gym and get gains with your gym bro', 'get a bubble tea with friends', 'watch an episode of sitcom with your bestie', 'go bowling with your bro', 'play a two person game like it takes 2', 'get a manicure with your girl/boy', 'drive around the city/country with the window down']
 events120m = ['Ripley’s Aquarium with your friend', 'Edge Walk at CN with your friend', 'Go to the Art Galley of Ontario - (Free if you are between age of 14-25) with your friend'  , 'Dig around in Kensington market with your friend', 'take a hour long bath with your friend' , 'play a game of chess', 'write a short story with your friend', 'craft a complex meal with a special someone', 'attempt at a race of knitting']
 
@@ -154,6 +156,7 @@ def event_create(start_date: list[int], end_date: list[int], title: str, locatio
         print('An error occurred: %s' % error)
 
 def main():
+    LoginWindow.main()
     creds = authenticate()
 
     try:
@@ -172,9 +175,9 @@ def main():
                 break
         
         # ask the user to check boxes indicating which calendars to analyze
-        # ask the user to check boxes indicating which calendars to analyze.
+        cals_to_check = gui.main(calendars_dict)
 
-        cals_to_check = ['golem8gamer@gmail.com', 'Holidays in Canada', 'broland']
+        # the max time to look at in days, this determines how far out calendar suggestrions will be made
         max_scan_time_days = 3
         free_time_array = get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days)
         print (free_time_array)
@@ -195,7 +198,7 @@ def main():
             start_date = [start_datetimeobj.year, start_datetimeobj.month, start_datetimeobj.day, start_datetimeobj.hour, start_datetimeobj.minute]
             end_date = [end_datetimeobj.year, end_datetimeobj.month, end_datetimeobj.day, end_datetimeobj.hour, end_datetimeobj.minute]
             event_create(start_date=start_date, end_date=end_date, title=chosen_event, location=None, description=None, attendees=None)
-            #print(chosen_event)
+            print(chosen_event)
     except HttpError as error:
         print('An error occurred: %s' % error)
 
