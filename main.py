@@ -3,6 +3,7 @@
 import datetime
 import os.path
 import random
+from re import L
 import time
 
 from google.auth.transport.requests import Request
@@ -10,6 +11,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+from gui import d
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -98,6 +101,58 @@ def authenticate():
             token.write(creds.to_json())
     return creds
 
+def event_create(start_date: list[int], end_date: list[int], title: str, location: str,
+                 description: str, attendees: list[str]):
+    """
+
+    :param start_date: list of integers indicating the year, month, day, hour and minute of the
+    start of the event in that order
+    :param end_date: list of integers indicating the year, month, day, hour and minute of the end
+    of the event in that order
+    :param title: A string representing the title of the event
+    :param location: A string representing the location of the event
+    :param description: A string representing the a description of the event
+    :param attendees: A list of the email addresses of the people attending the event
+    """
+    time_zone = timezone('EST')
+    start_date = datetime.datetime(start_date[0], start_date[1], start_date[2], start_date[3],
+                                   start_date[4], tzinfo=time_zone)
+    end_date = datetime.datetime(end_date[0], end_date[1], end_date[2], end_date[3],
+                                 end_date[4], tzinfo=time_zone)
+    event_body_dict = {'summary': title, 'location': location, 'description': description,
+                       'start': {'dateTime': start_date.isoformat()},
+                       'end': {'dateTime': end_date.isoformat()}}
+    attendees_body = []
+    for attend in attendees:
+        attendees_body.append({'email': attend})
+    event_body_dict['attendees'] = attendees_body
+    event_body = json.dumps(event_body_dict)
+    event_object = json.loads(event_body)
+    print(event_body)
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
+    try:
+        service = build('calendar', 'v3', credentials=creds)
+        event = service.events().insert(calendarId='primary', body=event_object).execute()
+        print('Event created: %s' % (event.get('htmlLink')))
+    except HttpError as error:
+        print('An error occurred: %s' % error)
+
 def main():
     creds = authenticate()
 
@@ -126,18 +181,21 @@ def main():
 
         # call Ronit's function to get run lengths
         # which returns start time, end time, and run length (in terms of buckets)
-        runlen = 5
-        chosen_event = None
-        if runlen >= 8:
-            chosen_event = random.choice(events120m)
-        elif runlen >= 4:
-            chosen_event = random.choice(events60m)
-        elif runlen >= 2:
-            chosen_event = random.choice(events30m)
-        elif runlen == 1:
-            chosen_event = random.choice(events15m)
-        
-        print(chosen_event)
+        for data in run_lengths:
+            start_datetimeobj, end_datetimeobj, runlen = data
+            chosen_event = None
+            if runlen >= 8:
+                chosen_event = random.choice(events120m)
+            elif runlen >= 4:
+                chosen_event = random.choice(events60m)
+            elif runlen >= 2:
+                chosen_event = random.choice(events30m)
+            elif runlen == 1:
+                chosen_event = random.choice(events15m)
+            start_date = [start_datetimeobj.year, start_datetimeobj.month, start_datetimeobj.day, start_datetimeobj.hour, start_datetimeobj.minute]
+            end_date = [end_datetimeobj.year, end_datetimeobj.month, end_datetimeobj.day, end_datetimeobj.hour, end_datetimeobj.minute]
+            event_create(start_date=start_date, end_date=end_date, title=chosen_event, location=None, description=None, attendees=None)
+            #print(chosen_event)
     except HttpError as error:
         print('An error occurred: %s' % error)
 
