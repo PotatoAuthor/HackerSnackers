@@ -16,10 +16,12 @@ This is a combination of snippets from:
 import os
 import sys
 
-from google_auth_oauthlib.flow import InstalledAppFlow
+from oauth2client.client import OAuth2WebServerFlow
 from oauth2client.file import Storage
 from oauth2client.tools import run_flow
 
+CLIENT_ID = '811089499751-v846pgcg6sv4u8hks5377s42g6qg4s41.apps.googleusercontent.com'
+CLIENT_SECRET = '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'
 SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
 
 
@@ -42,8 +44,10 @@ def enable_stout(o_stdout, o_file):
 def get_oauth2_token():
     o_stdout, o_file = disable_stout()
 
-    flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPE)
+    flow = OAuth2WebServerFlow(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        scope=SCOPE)
 
     storage = Storage('token.json')
     credentials = run_flow(flow, storage)
