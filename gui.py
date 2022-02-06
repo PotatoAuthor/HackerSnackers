@@ -7,7 +7,7 @@ cal = []
 for c in calendar_list:
     cal.append(c)
 
-def main():
+def calendar():
     title_element = thorpy.make_text("Chose calendar to use", 40, (236, 158, 80))
     elements = [title_element]
     if calendar_length >= 1:
@@ -61,27 +61,17 @@ def done():
     thorpy.functions.quit_menu_func()
     thorpy.functions.quit_menu_func()
 
-
-application = thorpy.Application(size=(1000, 800), caption="Amitee")
-
-
-e_title = thorpy.make_text("Amitee", font_size=40, font_color=(10, 10, 10))
-e_title.center()
-
-e_subtitle = thorpy.make_text("Restoration of Friendship", font_size=15, font_color=(10, 10, 10))
-
-e_options = thorpy.make_button('Start', func=main)
-e_options.set_size((250, 80))
-
-e_quit = thorpy.make_button("Quit", func=thorpy.functions.quit_menu_func)
-e_quit.set_size((250, 80))
-
-
-
-e_background = thorpy.Background(image='friends.jpeg', elements=[e_title, e_subtitle, e_options, e_quit])
-thorpy.store(e_background)
-
-menu = thorpy.Menu(e_background)
-menu.play()
-
-application.quit()
+def main():
+    application = thorpy.Application(size=(1000, 800), caption="Amitee")
+    e_title = thorpy.make_text("Amitee", font_size=40, font_color=(10, 10, 10))
+    e_title.center()
+    e_subtitle = thorpy.make_text("Restoration of Friendship", font_size=15, font_color=(10, 10, 10))
+    e_options = thorpy.make_button('Start', func=calendar)
+    e_options.set_size((250, 80))
+    e_quit = thorpy.make_button("Quit", func=thorpy.functions.quit_menu_func)
+    e_quit.set_size((250, 80))
+    e_background = thorpy.Background(image='friends.jpeg', elements=[e_title, e_subtitle, e_options, e_quit])
+    thorpy.store(e_background)
+    menu = thorpy.Menu(e_background)
+    menu.play()
+    application.quit()
