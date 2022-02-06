@@ -2,6 +2,7 @@
 
 import datetime
 import os.path
+import random
 import time
 
 from google.auth.transport.requests import Request
@@ -12,6 +13,12 @@ from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+
+events15m = []
+events30m = []
+events60m = ['play league of legends with your friends', 'go on a walk in the park with your friends', 'watching football with your friends', 'rock climbing with your friends', 'hit the gym and get gains with your gym bro', 'get a bubble tea with friends', 'watch an episode of sitcom with your bestie', 'go bowling with your bro', 'play a two person game like it takes 2', 'get a manicure with your girl/boy', 'drive around the city/country with the window down']
+events120m = ['Ripley’s Aquarium with your friend', 'Edge Walk at CN with your friend', 'Go to the Art Galley of Ontario - (Free if you are between age of 14-25) with your friend'  , 'Dig around in Kensington market with your friend', 'take a hour long bath with your friend' , 'play a game of chess', 'write a short story with your friend', 'craft a complex meal with a special someone', 'attempt at a race of knitting']
+
 
 # Brief:
 #       Builds the schedule array, in which represents a 15 minute time window. If there is an event during
@@ -117,7 +124,20 @@ def main():
         free_time_array = get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days)
         print (free_time_array)
 
-
+        # call Ronit's function to get run lengths
+        # which returns start time, end time, and run length (in terms of buckets)
+        runlen = 5
+        chosen_event = None
+        if runlen >= 8:
+            chosen_event = random.choice(events120m)
+        elif runlen >= 4:
+            chosen_event = random.choice(events60m)
+        elif runlen >= 2:
+            chosen_event = random.choice(events30m)
+        elif runlen == 1:
+            chosen_event = random.choice(events15m)
+        
+        print(chosen_event)
     except HttpError as error:
         print('An error occurred: %s' % error)
 
