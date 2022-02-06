@@ -83,6 +83,7 @@ def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
         # use this to make python have a fixed length array
         return schedule_array[0:max_scan_time_days*96-1]
 
+# taken from Google Calendar API quickstart guide, https://developers.google.com/calendar/api/quickstart/python
 def authenticate():
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
@@ -184,6 +185,7 @@ def main():
 
         # call Ronit's function to get run lengths
         # which returns start time, end time, and run length (in terms of buckets)
+
         for data in run_lengths:
             start_datetimeobj, end_datetimeobj, runlen = data
             chosen_event = None
