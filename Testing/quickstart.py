@@ -21,8 +21,8 @@ def main():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if os.path.exists('../token.json'):
+        creds = Credentials.from_authorized_user_file('../token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -32,7 +32,7 @@ def main():
                 'credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+        with open('../token.json', 'w') as token:
             token.write(creds.to_json())
 
     try:
@@ -54,6 +54,36 @@ def main():
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             print(start, event['summary'])
+
+        # event = {
+        #     'summary': 'Google I/O 2015',
+        #     'location': '800 Howard St., San Francisco, CA 94103',
+        #     'description': 'A chance to hear more about Google\'s developer products.',
+        #     'start': {
+        #         'dateTime': '2022-02-05T09:00:00-07:00',
+        #         'timeZone': 'America/Los_Angeles',
+        #     },
+        #     'end': {
+        #         'dateTime': '2022-02-05T17:00:00-07:00',
+        #         'timeZone': 'America/Los_Angeles',
+        #     },
+        #     'recurrence': [
+        #         'RRULE:FREQ=DAILY;COUNT=2'
+        #     ],
+        #     'attendees': [
+        #         {'email': 'lpage@example.com'},
+        #         {'email': 'sbrin@example.com'},
+        #     ],
+        #     'reminders': {
+        #         'useDefault': False,
+        #         'overrides': [
+        #             {'method': 'email', 'minutes': 24 * 60},
+        #             {'method': 'popup', 'minutes': 10},
+        #         ],
+        #     },
+        # }
+        # event = service.events().insert(calendarId='primary', body=event).execute()
+        # print('Event created: %s' % (event.get('htmlLink')))
 
     except HttpError as error:
         print('An error occurred: %s' % error)

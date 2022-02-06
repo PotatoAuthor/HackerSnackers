@@ -1,5 +1,6 @@
 import thorpy
-#change the dictionary below to the dict of the input dictionary
+
+# change the dictionary below to the dict of the input dictionary
 calendar_list = {'main': 12984789372, 'utat': 120947908, 'canada holidays': 1092347820188}
 calendar_length = len(calendar_list)
 ans = set()
@@ -35,28 +36,34 @@ def calendar():
     e_quit.center()  # center the title on the screen
     e_quit.set_topleft((None, 600))
     elements.append(e_quit)
-    background = thorpy.Background(image='using.jpeg', elements=elements)
+    background = thorpy.Background(image='Assets/using.jpeg', elements=elements)
     thorpy.store(background, elements[:-1])
     menu = thorpy.Menu(background)
     menu.play()
 
+
 def a():
     ans.add(cal[0])
+
 
 def b():
     ans.add(cal[1])
 
+
 def c():
     ans.add(cal[2])
+
 
 def d():
     ans.add(cal[3])
 
+
 def e():
     ans.add(cal[4])
 
+
 def done():
-    #the set of keys to the dictionary that is selected
+    # the set of keys to the dictionary that is selected
     print(ans)
     thorpy.functions.quit_menu_func()
     thorpy.functions.quit_menu_func()
@@ -70,8 +77,12 @@ def main():
     e_options.set_size((250, 80))
     e_quit = thorpy.make_button("Quit", func=thorpy.functions.quit_menu_func)
     e_quit.set_size((250, 80))
-    e_background = thorpy.Background(image='friends.jpeg', elements=[e_title, e_subtitle, e_options, e_quit])
+    e_background = thorpy.Background(image='Assets/friends.jpeg', elements=[e_title, e_subtitle, e_options, e_quit])
     thorpy.store(e_background)
     menu = thorpy.Menu(e_background)
     menu.play()
     application.quit()
+
+
+if __name__ == '__main__':
+    main()
