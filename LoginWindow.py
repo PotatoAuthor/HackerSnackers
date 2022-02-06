@@ -39,6 +39,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
                 playing_game = False
                 break
             if event.type == MOUSEBUTTONDOWN:
@@ -47,8 +48,8 @@ def main():
                     LoginActivity.get_oauth2_token()
                     pygame.quit()
                     gui.main()
-
-    pygame.quit()
+                    playing_game = False
+                    break
 
 
 if __name__ == '__main__':
