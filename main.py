@@ -17,7 +17,7 @@ from googleapiclient.errors import HttpError
 from gui import d
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 events15m = ['Screen break']
 events30m =  ['discord call a friend', 'create a card or short video for someone far away', 'listen to some good music with a friend', 'make a cup of coffee/tea for someone', 'play a quick game of pickup basketball' , 'do a quick cardio workout', 'share you favorite tik tok']
@@ -105,7 +105,7 @@ def authenticate():
     return creds
 
 def event_create(start_date: list[int], end_date: list[int], title: str, location: str,
-                 description: str, attendees: list[str]):
+                 description: str, attendees: list[str], service):
     """
 
     :param start_date: list of integers indicating the year, month, day, hour and minute of the
@@ -132,26 +132,12 @@ def event_create(start_date: list[int], end_date: list[int], title: str, locatio
     event_body = json.dumps(event_body_dict)
     event_object = json.loads(event_body)
     print(event_body)
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
-        # Save the credentials for the next run
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
     try:
-        service = build('calendar', 'v3', credentials=creds)
-        event = service.events().insert(calendarId='primary', body=event_object).execute()
+        calendar = {
+            'summary': 'Amitee Suggestions',
+        }
+        amitee_calendar = service.calendars().insert(body=calendar).execute()
+        event = service.events().insert(calendarId=amitee_calendar['id'], body=event_object).execute()
         print('Event created: %s' % (event.get('htmlLink')))
     except HttpError as error:
         print('An error occurred: %s' % error)
@@ -162,6 +148,10 @@ def main():
 
     try:
         service = build('calendar', 'v3', credentials=creds)
+        calendar = {
+            'summary': 'Amitee Suggestions',
+        }
+        amitee_calendar = service.calendars().insert(body=calendar).execute()
 
         # Build a dictionary of calendars and their ids
         # calendars_dict will hold kv pairs, mapping calendar names to their ids
@@ -199,7 +189,8 @@ def main():
                 chosen_event = random.choice(events15m)
             start_date = [start_datetimeobj.year, start_datetimeobj.month, start_datetimeobj.day, start_datetimeobj.hour, start_datetimeobj.minute]
             end_date = [end_datetimeobj.year, end_datetimeobj.month, end_datetimeobj.day, end_datetimeobj.hour, end_datetimeobj.minute]
-            event_create(start_date=start_date, end_date=end_date, title=chosen_event, location=None, description=None, attendees=None)
+            event_create(start_date=start_date, end_date=end_date, title=chosen_event, 
+                location=None, description=None, attendees=None, service=service)
             print(chosen_event)
     except HttpError as error:
         print('An error occurred: %s' % error)

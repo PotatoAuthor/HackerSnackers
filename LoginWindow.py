@@ -47,7 +47,6 @@ def main():
                 if rect.collidepoint(mouse_pos):
                     LoginActivity.get_oauth2_token()
                     pygame.quit()
-                    gui.main()
                     playing_game = False
                     break
 
