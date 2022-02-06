@@ -82,6 +82,17 @@ def get_free_time(cals_to_check, service, calendars_dict, max_scan_time_days):
                 page_token = events.get('nextPageToken')
                 if not page_token:
                     break
+
+        time_loop = (datetime.datetime.now() + datetime.timedelta(
+            minutes=15 - (datetime.datetime.now().minute % 15))).replace(microsecond=0, second=0)
+        index = 0
+        while index < (max_scan_time_days * 96 - 1):
+            morning_bound_start = time_loop.replace(hour=8, minute=0)
+            night_bound_start = time_loop.replace(hour=22, minute=0)
+            if time_loop > night_bound_start or time_loop < morning_bound_start:
+                schedule_array[index] = 1
+            index += 1
+            time_loop = time_loop + datetime.timedelta(minutes=15)
         # use this to make python have a fixed length array
         return schedule_array[0:max_scan_time_days*96-1]
 
